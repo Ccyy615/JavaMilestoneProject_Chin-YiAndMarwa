@@ -22,7 +22,6 @@ public class Passenger {
     @GeneratedValue
     private int passengerId; //PK
 
-    @GeneratedValue
     private int ticketId;
 
     private String lastName;
