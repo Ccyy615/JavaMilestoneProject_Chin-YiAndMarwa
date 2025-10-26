@@ -23,8 +23,8 @@ public class Flights {
 
     @Id //PK
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long flightId;
+
     private String airline;
     private String placeDepart;
     private String destination;

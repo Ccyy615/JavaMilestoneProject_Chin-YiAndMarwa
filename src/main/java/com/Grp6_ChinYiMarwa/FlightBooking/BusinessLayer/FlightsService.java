@@ -6,6 +6,7 @@ import com.Grp6_ChinYiMarwa.FlightBooking.MapperLayer.FlightsMapper;
 import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsRequestDTO;
 import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsResponseDTO;
 import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.FlightNotFoundException;
+import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.InvalidFlightException;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,13 +84,6 @@ public class FlightsService {
 
         Flights existingFlight=this.flightsRepository.findById(idLong)
                 .orElseThrow(()-> new FlightNotFoundException("This Flight does not exist"));
-
-        List<Flights> flights=this.flightsRepository.findAllById((Iterable<Long>) existingFlight);
-
-        if(!flights.isEmpty()){
-            throw new FlightNotFoundException("a test");
-        }
-
         flightsRepository.deleteById(idLong);
     }
 

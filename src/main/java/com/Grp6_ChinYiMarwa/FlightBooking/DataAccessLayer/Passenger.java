@@ -19,8 +19,8 @@ import java.time.LocalDate;
 public class Passenger {
 
     @Id
-    @GeneratedValue
-    private int passengerId; //PK
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long passengerId; //PK
 
     private int ticketId;
 
@@ -71,9 +71,7 @@ public class Passenger {
     }
 
 
-    //Pk passengerId
-    //Fk flightId
-    // creates ticketId when choosing a flight
+
 
 
 
