@@ -22,30 +22,16 @@ import java.time.LocalTime;
 public class Flights {
 
     @Id //PK
-    @GeneratedValue
-    @NotNull
-    private String flightId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-
+    private Long flightId;
     private String airline;
-
-    @NotBlank
     private String placeDepart;
-    @NotBlank
     private String destination;
-
-    @FutureOrPresent
     private LocalDate departDate;
-
-    @Future
     private LocalDate arrivalDate;
-
-    @FutureOrPresent
     private LocalTime departTime;
-    @Future
     private LocalTime arrivalTime;
-
-    @Min(50)
     private double price;
 
 

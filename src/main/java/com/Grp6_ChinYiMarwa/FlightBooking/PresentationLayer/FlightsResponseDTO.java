@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @AllArgsConstructor
@@ -16,7 +15,7 @@ import java.time.LocalTime;
 
 public class FlightsResponseDTO {
 
-    private String flightId; //PK
+    private Long flightId;//PK
     private String airline;
 
     private String placeDepart;

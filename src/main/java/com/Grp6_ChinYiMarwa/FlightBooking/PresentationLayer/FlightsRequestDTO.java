@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @AllArgsConstructor
@@ -19,7 +18,7 @@ import java.time.LocalTime;
 @Setter
 public class FlightsRequestDTO {
 
-    private String flightId; //PK
+    private Long flightId; //PK
     private String airline;
     private String placeDepart;
     private String destination;

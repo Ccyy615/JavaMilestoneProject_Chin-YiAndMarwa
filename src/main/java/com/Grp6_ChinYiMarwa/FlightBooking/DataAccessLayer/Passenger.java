@@ -48,8 +48,7 @@ public class Passenger {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "fK_flight_id")
-    @NotNull
-    private Flights Flight; //flight object
+    private Flights flight; //flight object
 
     public Passenger(String firstName,String lastName,
                      LocalDate dateOfBirth, String gender, String address, String phoneNumber, String email,
@@ -68,7 +67,7 @@ public class Passenger {
 
         this.creditCardNumber = creditCardNumber;
         this.numOfBaggage = numOfBaggage;
-        Flight = flight;
+        this.flight = flight;
     }
 
 
