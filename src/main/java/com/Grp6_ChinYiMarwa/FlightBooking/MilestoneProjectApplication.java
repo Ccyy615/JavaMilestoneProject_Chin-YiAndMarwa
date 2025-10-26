@@ -155,8 +155,11 @@ public class MilestoneProjectApplication implements CommandLineRunner {
                 2000.0);
 
 
-        Passenger passenger1= new Passenger("Maria","Gomez",LocalDate.of(1996, 10, 9),"Female",
-                "2009 Boulevard Marie","514-765-9006","mariaGooomez96@hotmail.com","HelloPasseportNumHere",LocalDate.of(2029,1,16),"4390 8901 6783 5352",2,flight2);
+        Passenger passenger1= new Passenger("Maria","Gomez",
+                LocalDate.of(1996, 10, 9),"Female",
+                "2009 Boulevard Marie","514-765-9006"
+                ,"mariaGooomez96@hotmail.com","HelloPasseportNumHere",
+                LocalDate.of(2029,1,16),"4390 8901 6783 5352",2,flight2);
 
 
 
