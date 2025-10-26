@@ -46,7 +46,7 @@ public class Passenger {
     private String FlightClass;
     private int numOfBaggage;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "fK_flight_id")
     private Flights flight; //flight object
 
