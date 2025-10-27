@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 @Entity
@@ -20,39 +21,25 @@ import java.time.LocalDateTime;
 
 public class Flights {
 
-    @Id
-    @GeneratedValue
-    @NotNull
-    private String flightId; //PK
+    @Id //PK
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long flightId;
 
-
-    private String airLine;
-
-    @NotBlank
+    private String airline;
     private String placeDepart;
-    @NotBlank
     private String destination;
-
-    @FutureOrPresent
     private LocalDate departDate;
-
-    @Future
     private LocalDate arrivalDate;
-
-    @FutureOrPresent
-    private LocalDateTime departTime;
-    @Future
-    private LocalDateTime arrivalTime;
-
-    @Min(50)
+    private LocalTime departTime;
+    private LocalTime arrivalTime;
     private double price;
 
 
-    public Flights(String airLine, String placeDepart, String destination,
+    public Flights(String airline, String placeDepart, String destination,
                    LocalDate departDate,
-                   LocalDate arrivalDate, LocalDateTime departTime,
-                   LocalDateTime arrivalTime, double price) {
-        this.airLine = airLine;
+                   LocalDate arrivalDate, LocalTime departTime,
+                   LocalTime arrivalTime, double price) {
+        this.airline = airline;
         this.placeDepart = placeDepart;
         this.destination = destination;
         this.departDate = departDate;
