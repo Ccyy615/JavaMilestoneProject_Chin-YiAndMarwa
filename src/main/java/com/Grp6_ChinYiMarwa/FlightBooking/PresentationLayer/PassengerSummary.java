@@ -14,9 +14,10 @@ import java.time.LocalDate;
 @Getter
 public class PassengerSummary {
 
+    private Long passengerId;
     private String firstName;
     private String lastName;
-    private int phoneNumber;
+    private String phoneNumber;
     private String email;
     private int passportNumber;
     private LocalDate passportExpiryDate;

@@ -3,53 +3,81 @@ package com.Grp6_ChinYiMarwa.FlightBooking.BusinessLayer;
 
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Passenger;
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.PassengerRepository;
+import com.Grp6_ChinYiMarwa.FlightBooking.MapperLayer.PassengerMapper;
+import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerRequestDTO;
+import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerResponseDTO;
+import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.PassengerNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class PassengerService {
 
     private final PassengerRepository passengerRepository;
+    private PassengerMapper passengerMapper;
 
-    public PassengerService(PassengerRepository passengerRepository) {
+    public PassengerService(PassengerRepository passengerRepository, PassengerMapper passengerMapper) {
         this.passengerRepository=passengerRepository;
+        this.passengerMapper=passengerMapper;
     }
 
-    public List<Passenger> getPassengers() {
+    public List<PassengerResponseDTO> getPassengers() {
 
-        return this.passengerRepository.findAll();
+        List<Passenger> passengers = this.passengerRepository.findAll();
+        List<PassengerResponseDTO> passengerResponseDTO= new ArrayList<>();
+
+        for(Passenger passenger : passengers) {
+            passengerResponseDTO.add(this.passengerMapper.toResponse(passenger));
+        }
+        return passengerResponseDTO;
     }
 
-    public Optional<Passenger> getPassengerById(Long id) {
-        return this.passengerRepository.findById(id);
+    public PassengerResponseDTO getPassengerById(String id) {
+        long idLong = Long.parseLong(id);
+        return this.passengerRepository.findById(idLong)
+                .map(this.passengerMapper::toResponse)
+                .orElseThrow(()-> new PassengerNotFoundException("Passenger " + id + " not Found"));
     }
 
-    public Passenger createPassenger(Map<String, Object> passengerData) {
+    public PassengerResponseDTO createPassenger(PassengerRequestDTO passengerData) {
 
-        Passenger passenger = new Passenger();
+        Passenger newPassenger = this.passengerMapper.fromRequestDTOtoPassengerEntity(passengerData);
+        Passenger saveNewPassenger = this.passengerRepository.save(newPassenger);
+
+        return this.passengerMapper.toResponse(saveNewPassenger);
+        /*Passenger passenger = new Passenger();
         passenger.setFirstName( passengerData.get("firstName").toString());
         passenger.setLastName(passengerData.get("lastName").toString());
-
         Passenger savedNewPassenger = this.passengerRepository.save(passenger);
-        return savedNewPassenger;
+        return savedNewPassenger;*/
 
     }
 
-    public Passenger updatePassenger(Long id, Map<String, Object> passengerData) {
+    public PassengerResponseDTO updatePassenger(String id, PassengerRequestDTO passengerData) {
 
-        Passenger passenger = this.passengerRepository.findById(id).get();
+        long idLong = Long.parseLong(id);
+        Optional<Passenger> passenger = this.passengerRepository.findById(idLong);
+        if(passenger.isEmpty())
+            throw new PassengerNotFoundException("Passenger "+id+" not Found.");
+
+        Passenger newPassenger = this.passengerMapper.fromRequestDTOtoPassengerEntity(passengerData);
+
+        newPassenger.setPassengerId(idLong);
+        Passenger updatedPassenger = this.passengerRepository.save(newPassenger);
+
+        return passengerMapper.toResponse(updatedPassenger);
+        /*Passenger passenger = this.passengerRepository.findById(id).get();
         passenger.setFirstName( passengerData.get("firstName").toString());
         passenger.setLastName(passengerData.get("lastName").toString());
-
         Passenger savedPassenger = this.passengerRepository.save(passenger);
-        return savedPassenger;
+        return savedPassenger;*/
     }
 
-    public void deletePassenger(Long id) {
-        this.passengerRepository.deleteById(id);
+    public void deletePassenger(String id) {
+        long idLong = Long.parseLong(id);
+        this.passengerRepository.deleteById(idLong);
     }
-
 }

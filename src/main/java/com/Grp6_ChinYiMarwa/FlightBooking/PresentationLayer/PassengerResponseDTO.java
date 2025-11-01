@@ -14,16 +14,16 @@ import java.time.LocalDate;
 @Setter
 public class PassengerResponseDTO {
 
+    private Long passengerId;
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBirth;
     private String gender;
     private String address;
-    private int phoneNumber;
+    private String phoneNumber;
     private String email;
-    private int passportNumber;
+    private String passportNumber;
     private LocalDate passportExpiryDate;
-    private int creditCardNumber;
+    private String creditCardNumber;
     private int numOfBaggage;
     private FlightsSummary flightsSummary;
 

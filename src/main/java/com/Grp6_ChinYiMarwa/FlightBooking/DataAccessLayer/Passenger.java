@@ -22,18 +22,18 @@ public class Passenger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long passengerId; //PK
 
-    private int ticketId;
+    //private int ticketId;
 
     private String lastName;
     private String firstName;
 
-    @Past // this is for date of birth must be in the past
+    @Past
     private LocalDate dateOfBirth;
     private String gender;
     private String address;
     private String phoneNumber;
 
-  @Email(message = "invalid email") // those are validation examples
+    @Email(message = "invalid email")
     private String email;
 
     private String passportNumber;

@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FlightsSummary {
-
     private Long flightId;
     private String placeDepart;
     private String destination;
