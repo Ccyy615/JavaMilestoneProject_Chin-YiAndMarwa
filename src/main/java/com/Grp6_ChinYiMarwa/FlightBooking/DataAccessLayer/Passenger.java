@@ -22,8 +22,6 @@ public class Passenger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long passengerId; //PK
 
-    //private int ticketId;
-
     private String lastName;
     private String firstName;
 
@@ -40,10 +38,6 @@ public class Passenger {
     private LocalDate passportExpiryDate;
     private String creditCardNumber;
 
-
-
-    //FirstClass, Economy, Business
-    private String FlightClass;
     private int numOfBaggage;
 
     @ManyToOne(cascade = CascadeType.PERSIST)

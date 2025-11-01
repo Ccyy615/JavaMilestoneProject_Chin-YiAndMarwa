@@ -40,18 +40,6 @@ public class PassengerController {
         return ResponseEntity
                 .created(URI.create("/passengers/" + savedPassenger.getPassengerId()))
                 .body(savedPassenger);
-
-        /*Passenger savedNewPassenger = this.passengerService.createPassenger(passengerData);
-        Map<String,Object> result;
-        if (savedNewPassenger != null)
-            result=Map.of("status", "success", "message",
-                    "Passenger created successfully", "new passenger saved", savedNewPassenger,
-                    "id assigned to new passenger", savedNewPassenger.getPassengerId());
-        else {
-            result=Map.of("ststus","Failure",
-                    "message", "Could not save new passenger in database");
-        }
-        return result;*/
     }
 
     @PutMapping("/{id}")
@@ -60,22 +48,6 @@ public class PassengerController {
         PassengerResponseDTO savedPassenger = this.passengerService.updatePassenger(id, requestPassenger);
         return ResponseEntity.ok(savedPassenger);
 
-        /*Passenger updatedPassenger = this.passengerService.updatePassenger(id, passengerData);
-        Map<String, Object> result;
-        if (updatedPassenger != null)
-            result=Map.of(
-                    "status", "success",
-                    "message","Passenger created successfully",
-                    "new passenger saved", updatedPassenger,
-                    "id assigned to new car", updatedPassenger.getPassengerId()
-            );
-        else {
-            result=Map.of(
-                    "status", "Failure",
-                    "message", "Could not save passenger in database"
-            );
-        }
-        return result;*/
     }
 
     @DeleteMapping("/{id}")
