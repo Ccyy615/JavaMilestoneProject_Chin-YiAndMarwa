@@ -32,6 +32,8 @@ public class Flights {
     private LocalDate arrivalDate;
     private LocalTime departTime;
     private LocalTime arrivalTime;
+
+    @Min(50)
     private double price;
 
 

@@ -2,28 +2,36 @@ package com.Grp6_ChinYiMarwa.FlightBooking.BusinessLayer;
 
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Flights;
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.FlightsRepository;
+import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Passenger;
+import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.PassengerRepository;
 import com.Grp6_ChinYiMarwa.FlightBooking.MapperLayer.FlightsMapper;
 import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsRequestDTO;
 import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsResponseDTO;
 import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.FlightNotFoundException;
 import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.InvalidFlightException;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FlightsService {
 
     private final FlightsMapper flightsMapper;
     private final FlightsRepository flightsRepository;
+    private final PassengerRepository passengerRepository;
 
-    public FlightsService(FlightsRepository flightsRepository,FlightsMapper flightsMapper) {
+
+    public FlightsService(FlightsRepository flightsRepository, FlightsMapper flightsMapper, PassengerRepository passengerRepository) {
         this.flightsMapper=flightsMapper;
         this.flightsRepository = flightsRepository;
+        this.passengerRepository = passengerRepository;
     }
 
     //get all flights
@@ -48,6 +56,20 @@ public class FlightsService {
     //create a flight
 
     public FlightsResponseDTO createFlight(FlightsRequestDTO flightData ){
+
+        List<Flights> existingFlights = flightsRepository.findAll();
+
+        for(Flights existingFlight : existingFlights) {
+            if(existingFlight.getAirline().equals(flightData.getAirline()) &&
+                    existingFlight.getPlaceDepart().equals(flightData.getPlaceDepart()) &&
+                    existingFlight.getDestination().equals(flightData.getDestination()) &&
+                    existingFlight.getDepartDate().equals(flightData.getDepartDate()) &&
+                    existingFlight.getDepartTime().equals(flightData.getDepartTime())) {
+
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Flight already exists");
+            }
+        }
+
         Flights flight=this.flightsMapper.toEntity(flightData);
         Flights savedFlights=this.flightsRepository.save(flight);
         return this.flightsMapper.toResponse(savedFlights);
@@ -87,19 +109,27 @@ public class FlightsService {
         flightsRepository.deleteById(idLong);
     }
 
+//    public List<CarResponseModel> getCarsOfOwnerId(String id) {
+//        Long LongId=Long.parseLong(id);
+//        Owner owner= this.ownerRepository.findById(LongId)
+//                .orElseThrow(()-> new OwnerNotFoundException("Owner with given "+id+ "is not found: "));
+//        List<Car> cars= this.carRepository.findCarsByOwner(owner);
+//        return cars.stream()
+//                .map(carMapper::toResponse)
+//                .collect(Collectors.toList());
+//
+//    }
 
-    /*
-    *    public void deleteOwnerById(String id) {
+//    public List<FlightsResponseDTO> getPassengersByFlightId(String id){
+//        Long idLong =Long.parseLong(id);
+//
+//        Flights flights=this.flightsRepository.findById(idLong)
+//                .orElseThrow(()-> new FlightNotFoundException("Flight:  " + idLong +" does not exist"));
+//
+//        Optional<Passenger> passengers=this.passengerRepository.findById(idLong);
+//        return passengers.stream().map(PassengerMapper:: toResponse)
+//                .collect(Collectors.toList());
+//
+//    }
 
-        Owner existingOwner = ownerRepository.findById(longId)
-            .orElseThrow(() -> new OwnerNotFoundException("Owner with id: " + longId + " not found."));
-        List<Car> cars = carRepository.findCarsByOwner(existingOwner);
-
-        if (!cars.isEmpty()) {
-           throw new InvalidOwnerDeleteException( "Cannot delete owner with existing cars.");
-    }
-        ownerRepository.deleteById(longId);
-    }
-    *
-    * */
 }
