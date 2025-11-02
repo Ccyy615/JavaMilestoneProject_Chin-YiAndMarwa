@@ -27,5 +27,6 @@ public class FlightsRequestDTO {
     private LocalTime departTime;
     private LocalTime arrivalTime;
     private double price;
+    private String internalCode;
 
 }

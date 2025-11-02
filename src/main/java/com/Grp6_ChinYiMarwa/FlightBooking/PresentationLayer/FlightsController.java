@@ -53,13 +53,28 @@ public class FlightsController {
   }
 
 
-//    @GetMapping("/owners/{id}/cars")
-//    public ResponseEntity<List<CarResponseModel>> getCarsOfOwnerId(@PathVariable String id) {
-//        List<CarResponseModel> cars = this.ownerService.getCarsOfOwnerId(id);
-//        this.ownerService.getCarsOfOwnerId(id);
-//        return ResponseEntity.ok(cars);
-//
-//    }
+    @GetMapping("/flights/{id}/passengers")
+    public ResponseEntity<List<PassengerResponseDTO>> getPassengersByFlightId(@PathVariable String id) {
+        List<PassengerResponseDTO> passengers = this.flightsService.getPassengersByFlightId(id);
+        return ResponseEntity.ok(passengers);
+    }
+
 
 }
+//// 200 OK - successful retrieval
+//return ResponseEntity.ok(car);
+//// 201 Created - new resource created
+//return ResponseEntity.status(HttpStatus.CREATED).body(newCar);
+//// 204 No Content - successful deletion
+//return ResponseEntity.noContent().build();
+//// 400 Bad Request - invalid input
+//throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ID format");
+//// 404 Not Found - resource doesn't exist
+//throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found");
+//// 409 Conflict - duplicate resource
+//throw new ResponseStatusException(HttpStatus.CONFLICT, "Car with VIN already exists");
+//// 500 Internal Server Error - unexpected error
+//throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
+
+
 

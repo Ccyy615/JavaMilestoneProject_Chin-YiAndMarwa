@@ -17,14 +17,11 @@ public class FlightsResponseDTO {
 
     private Long flightId;//PK
     private String airline;
-
     private String placeDepart;
     private LocalDate departDate;
     private LocalTime departTime;
-
     private String destination;
     private LocalDate arrivalDate;
     private LocalTime arrivalTime;
-
     private double price;
 }

@@ -19,8 +19,8 @@ import java.util.Arrays;
 public class MilestoneProjectApplication implements CommandLineRunner {
 
 
-    private FlightsRepository flightsRepository;
-    private PassengerRepository passengerRepository;
+    private final FlightsRepository flightsRepository;
+    private final PassengerRepository passengerRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(MilestoneProjectApplication.class);
 
@@ -146,6 +146,8 @@ public class MilestoneProjectApplication implements CommandLineRunner {
 
 //
         passengerRepository.saveAll(Arrays.asList(passenger1, passenger2));
+
+
         System.out.println("Number of flights in DB: " + flightsRepository.count());
         logger.info("Flights count: {}", flightsRepository.count());
 

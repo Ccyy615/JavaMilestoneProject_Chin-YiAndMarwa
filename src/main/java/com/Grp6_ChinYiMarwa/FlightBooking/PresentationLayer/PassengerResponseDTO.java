@@ -17,14 +17,14 @@ public class PassengerResponseDTO {
     private Long passengerId;
     private String firstName;
     private String lastName;
-    private String gender;
-    private String address;
+//    private String gender;
+//    private String address;
     private String phoneNumber;
     private String email;
-    private String passportNumber;
-    private LocalDate passportExpiryDate;
-    private String creditCardNumber;
-    private int numOfBaggage;
-    private FlightsSummary flightsSummary;
+//    private String passportNumber;
+//    private LocalDate passportExpiryDate;
+//    private String creditCardNumber;
+//    private int numOfBaggage;
+//    private FlightsSummary flightsSummary;
 
 }

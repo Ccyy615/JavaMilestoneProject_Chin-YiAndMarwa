@@ -5,11 +5,13 @@ import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.FlightsRepository;
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Passenger;
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.PassengerRepository;
 import com.Grp6_ChinYiMarwa.FlightBooking.MapperLayer.FlightsMapper;
+import com.Grp6_ChinYiMarwa.FlightBooking.MapperLayer.PassengerMapper;
 import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsRequestDTO;
 import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsResponseDTO;
+import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerResponseDTO;
 import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.FlightNotFoundException;
-import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.InvalidFlightException;
-import lombok.Getter;
+import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.InvalidRequestFlightException;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,15 +42,17 @@ public class FlightsService {
         for(Flights flights : allFlights){
             flightsAll.add(this.flightsMapper.toResponse(flights));
         }
-            return flightsAll;
+        return flightsAll;
     }
 
     //get flight by id
 
     public FlightsResponseDTO getFlightById(@PathVariable String id){
         long idLong=Long.parseLong(id);
-        Optional<Flights> flights=this.flightsRepository.findById(idLong);
-        return this.flightsMapper.toResponse(flights.get());
+//        Optional<Flights> flights= this.flightsRepository.findById(idLong);
+        Flights flights = flightsRepository.findById(idLong)
+                .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + id + " not found"));
+        return this.flightsMapper.toResponse(flights);
     }
 
 
@@ -79,23 +82,27 @@ public class FlightsService {
     //update a flight
 
     public FlightsResponseDTO updateFlight(String id, FlightsRequestDTO flightData){
-        Long idLong=Long.parseLong(id);
 
-        Flights existingFlight=this.flightsRepository.findById(idLong)
-                .orElseThrow(()-> new FlightNotFoundException("This Flight does not exist"));
+        try{
+            Long idLong=Long.parseLong(id);
+            Flights existingFlight=this.flightsRepository.findById(idLong)
+                    .orElseThrow(()-> new FlightNotFoundException("Flight: " + id +" does not exist"));
 
+            existingFlight.setAirline(flightData.getAirline());
+            existingFlight.setPlaceDepart(flightData.getPlaceDepart());
+            existingFlight.setDepartDate(flightData.getDepartDate());
+            existingFlight.setDepartTime(flightData.getDepartTime());
+            existingFlight.setDestination(flightData.getDestination());
+            existingFlight.setArrivalDate(flightData.getArrivalDate());
+            existingFlight.setArrivalTime(flightData.getArrivalTime());
+            existingFlight.setPrice(flightData.getPrice());
 
-        existingFlight.setAirline(flightData.getAirline());
-        existingFlight.setPlaceDepart(flightData.getPlaceDepart());
-        existingFlight.setDepartDate(flightData.getDepartDate());
-        existingFlight.setDepartTime(flightData.getDepartTime());
-        existingFlight.setDestination(flightData.getDestination());
-        existingFlight.setArrivalDate(flightData.getArrivalDate());
-        existingFlight.setArrivalTime(flightData.getArrivalTime());
-        existingFlight.setPrice(flightData.getPrice());
+            Flights updatedFlight=this.flightsRepository.save(existingFlight);
+            return this.flightsMapper.toResponse(updatedFlight);
+        }catch(NumberFormatException message){
+            throw new InvalidRequestFlightException("Invalid id format: "+id+" Valid Id format ex. 1");
+        }
 
-        Flights updatedFlight=this.flightsRepository.save(existingFlight);
-        return this.flightsMapper.toResponse(updatedFlight);
     }
 
 
@@ -105,31 +112,38 @@ public class FlightsService {
         long idLong = Long.parseLong(id);
 
         Flights existingFlight=this.flightsRepository.findById(idLong)
-                .orElseThrow(()-> new FlightNotFoundException("This Flight does not exist"));
+                .orElseThrow(()-> new FlightNotFoundException("Flight: "+ id + "does not exist"));
         flightsRepository.deleteById(idLong);
     }
 
-//    public List<CarResponseModel> getCarsOfOwnerId(String id) {
-//        Long LongId=Long.parseLong(id);
-//        Owner owner= this.ownerRepository.findById(LongId)
-//                .orElseThrow(()-> new OwnerNotFoundException("Owner with given "+id+ "is not found: "));
-//        List<Car> cars= this.carRepository.findCarsByOwner(owner);
-//        return cars.stream()
-//                .map(carMapper::toResponse)
-//                .collect(Collectors.toList());
-//
-//    }
 
-//    public List<FlightsResponseDTO> getPassengersByFlightId(String id){
-//        Long idLong =Long.parseLong(id);
-//
-//        Flights flights=this.flightsRepository.findById(idLong)
-//                .orElseThrow(()-> new FlightNotFoundException("Flight:  " + idLong +" does not exist"));
-//
-//        Optional<Passenger> passengers=this.passengerRepository.findById(idLong);
-//        return passengers.stream().map(PassengerMapper:: toResponse)
-//                .collect(Collectors.toList());
-//
-//    }
+    public List<PassengerResponseDTO> getPassengersByFlightId(String id){
+        try{
+            Long idLong =Long.parseLong(id);
+            Flights flights=this.flightsRepository.findById(idLong)
+                    .orElseThrow(()-> new FlightNotFoundException("Flight:  " + idLong +" does not exist"));
+            List<Passenger> passengers=this.passengerRepository.findPassengerByFlight(flights);
+            return passengers.stream().map(PassengerMapper::toResponseToFlight)
+                    .collect(Collectors.toList());
+        }
+        catch(NumberFormatException e){
+            throw new InvalidRequestFlightException("Invalid id format"+id+" Valid Id format ex. 1");
+        }
+    }
 
 }
+
+//// 200 OK - successful retrieval
+//return ResponseEntity.ok(car);
+//// 201 Created - new resource created
+//return ResponseEntity.status(HttpStatus.CREATED).body(newCar);
+//// 204 No Content - successful deletion
+//return ResponseEntity.noContent().build();
+//// 400 Bad Request - invalid input
+//throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ID format");
+//// 404 Not Found - resource doesn't exist
+//throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found");
+//// 409 Conflict - duplicate resource
+//throw new ResponseStatusException(HttpStatus.CONFLICT, "Car with VIN already exists");
+//// 500 Internal Server Error - unexpected error
+//throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");
