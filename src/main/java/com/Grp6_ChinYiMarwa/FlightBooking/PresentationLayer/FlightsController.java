@@ -52,5 +52,14 @@ public class FlightsController {
         return ResponseEntity.noContent().build();
   }
 
+
+//    @GetMapping("/owners/{id}/cars")
+//    public ResponseEntity<List<CarResponseModel>> getCarsOfOwnerId(@PathVariable String id) {
+//        List<CarResponseModel> cars = this.ownerService.getCarsOfOwnerId(id);
+//        this.ownerService.getCarsOfOwnerId(id);
+//        return ResponseEntity.ok(cars);
+//
+//    }
+
 }
 
