@@ -15,7 +15,7 @@ public class PassengerMapper {
     public static PassengerResponseDTO toResponse(Passenger passenger){
         Flights flights = passenger.getFlight();
 
-        return new PassengerResponseDTO(passenger.getFirstName(),passenger.getLastName()
+        return new PassengerResponseDTO(passenger.getPassengerId(), passenger.getFirstName(),passenger.getLastName()
                 );
     }
 

@@ -18,6 +18,6 @@ public class PassengerSummary {
     private String lastName;
     private int phoneNumber;
     private String email;
-    private int passportNumber;
-    private LocalDate passportExpiryDate;
+//    private int passportNumber;
+//    private LocalDate passportExpiryDate;
 }

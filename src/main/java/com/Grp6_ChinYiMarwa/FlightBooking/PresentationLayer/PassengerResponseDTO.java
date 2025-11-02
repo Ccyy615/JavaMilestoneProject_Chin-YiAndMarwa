@@ -14,9 +14,10 @@ import java.time.LocalDate;
 @Setter
 public class PassengerResponseDTO {
 
+    private Long passengerId;
     private String firstName;
     private String lastName;
-//    private long flightId;
+
 //    private FlightsSummary flightsSummary;
 
 }
