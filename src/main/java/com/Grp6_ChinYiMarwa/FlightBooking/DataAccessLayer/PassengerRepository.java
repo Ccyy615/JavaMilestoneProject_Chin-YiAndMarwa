@@ -9,4 +9,6 @@ import java.util.List;
 public interface PassengerRepository extends JpaRepository<Passenger,Long> {
 
     List<Passenger> findByFlight(Flights flights);
+
+    List<Passenger> findPassengerByFlight(Flights flights);
 }

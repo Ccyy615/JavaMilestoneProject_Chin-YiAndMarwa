@@ -1,6 +1,7 @@
 package com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer;
 
 import com.Grp6_ChinYiMarwa.FlightBooking.BusinessLayer.FlightsService;
+import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Flights;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +20,16 @@ public class FlightsController {
 
     //Get all the flights
     @GetMapping("/flights")
-    public List<FlightsResponseDTO> getAllFlights(){
-        return this.flightsService.getAllFlights();
+    public ResponseEntity<List<FlightsResponseDTO>> getAllFlights(){
+        List<FlightsResponseDTO> allFlights = this.flightsService.getAllFlights();
+        return ResponseEntity.ok(allFlights);
     }
 
     //Get flights by the Identification
     @GetMapping("/flights/{id}")
-        public FlightsResponseDTO getFlightById(@PathVariable String id){
-            return this.flightsService.getFlightById(id);
+        public ResponseEntity<FlightsResponseDTO> getFlightById(@PathVariable String id){
+            FlightsResponseDTO flights= this.flightsService.getFlightById(id);
+            return ResponseEntity.ok(flights);
         }
 
     //Create a flight
@@ -44,7 +47,7 @@ public class FlightsController {
         return ResponseEntity.ok(flight);
       }
 
-//
+
 //    //delete flight
   @DeleteMapping("/flights/{id}")
     public ResponseEntity<Void> deleteFlightById(@PathVariable String id){
@@ -52,14 +55,25 @@ public class FlightsController {
         return ResponseEntity.noContent().build();
   }
 
+    @GetMapping("/flights/{id}/passengers")
+    public ResponseEntity<List<PassengerResponseDTO>> getPassengersByFlightId(@PathVariable String id) {
+        List<PassengerResponseDTO> passengers = this.flightsService.getPassengersByFlightId(id);
+        return ResponseEntity.ok(passengers);
+    }
 
-//    @GetMapping("/owners/{id}/cars")
-//    public ResponseEntity<List<CarResponseModel>> getCarsOfOwnerId(@PathVariable String id) {
-//        List<CarResponseModel> cars = this.ownerService.getCarsOfOwnerId(id);
-//        this.ownerService.getCarsOfOwnerId(id);
-//        return ResponseEntity.ok(cars);
-//
-//    }
 
 }
-
+//// 200 OK - successful retrieval
+//return ResponseEntity.ok(car);
+//// 201 Created - new resource created
+//return ResponseEntity.status(HttpStatus.CREATED).body(newCar);
+//// 204 No Content - successful deletion
+//return ResponseEntity.noContent().build();
+//// 400 Bad Request - invalid input
+//throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ID format");
+//// 404 Not Found - resource doesn't exist
+//throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found");
+//// 409 Conflict - duplicate resource
+//throw new ResponseStatusException(HttpStatus.CONFLICT, "Car with VIN already exists");
+//// 500 Internal Server Error - unexpected error
+//throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error");

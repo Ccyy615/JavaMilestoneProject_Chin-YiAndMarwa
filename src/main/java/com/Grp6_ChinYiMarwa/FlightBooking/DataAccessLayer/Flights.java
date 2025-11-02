@@ -11,6 +11,8 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
 
 
 @Entity
@@ -32,7 +34,7 @@ public class Flights {
     private LocalDate arrivalDate;
     private LocalTime departTime;
     private LocalTime arrivalTime;
-
+    private String internalCode;
     @Min(50)
     private double price;
 
@@ -40,7 +42,7 @@ public class Flights {
     public Flights(String airline, String placeDepart, String destination,
                    LocalDate departDate,
                    LocalDate arrivalDate, LocalTime departTime,
-                   LocalTime arrivalTime, double price) {
+                   LocalTime arrivalTime, double price,String internalCode) {
         this.airline = airline;
         this.placeDepart = placeDepart;
         this.destination = destination;
@@ -48,7 +50,9 @@ public class Flights {
         this.arrivalDate = arrivalDate;
         this.departTime = departTime;
         this.arrivalTime = arrivalTime;
+        this.internalCode=internalCode;
         this.price = price;
+
     }
 
 }

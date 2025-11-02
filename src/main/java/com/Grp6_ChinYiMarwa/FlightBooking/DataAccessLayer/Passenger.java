@@ -64,10 +64,8 @@ public class Passenger {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
-
         this.passportNumber = passportNumber;
         this.passportExpiryDate = passportExpiryDate;
-
         this.creditCardNumber = creditCardNumber;
         this.numOfBaggage = numOfBaggage;
         this.flight = flight;

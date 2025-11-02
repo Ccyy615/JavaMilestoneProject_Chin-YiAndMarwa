@@ -16,15 +16,7 @@ public class PassengerResponseDTO {
 
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBirth;
-    private String gender;
-    private String address;
-    private int phoneNumber;
-    private String email;
-    private int passportNumber;
-    private LocalDate passportExpiryDate;
-    private int creditCardNumber;
-    private int numOfBaggage;
-    private FlightsSummary flightsSummary;
+//    private long flightId;
+//    private FlightsSummary flightsSummary;
 
 }

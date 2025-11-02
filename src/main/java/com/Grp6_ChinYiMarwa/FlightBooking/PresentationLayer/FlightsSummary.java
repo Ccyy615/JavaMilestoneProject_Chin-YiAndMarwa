@@ -13,6 +13,8 @@ public class FlightsSummary {
 
     private Long flightId;
     private String placeDepart;
+    private String departTime;
     private String destination;
+
 
 }

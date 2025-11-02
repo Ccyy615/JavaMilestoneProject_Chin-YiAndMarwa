@@ -43,6 +43,7 @@ public class FlightsMapper {
         f1.setArrivalDate(flightRequest.getArrivalDate());
         f1.setArrivalTime(flightRequest.getArrivalTime());
         f1.setPrice(flightRequest.getPrice());
+        f1.setInternalCode(flightRequest.getInternalCode());
 
         return f1;
     }

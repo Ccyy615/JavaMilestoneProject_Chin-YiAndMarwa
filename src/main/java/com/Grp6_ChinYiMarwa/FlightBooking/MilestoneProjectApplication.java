@@ -44,42 +44,42 @@ public class MilestoneProjectApplication implements CommandLineRunner {
                 LocalDate.of(2025, 11, 2),
                 LocalTime.of(20, 0),
                 LocalTime.of(8, 0),
-                1200.0);
+                1200.0,"INT-FLT-001A");
 
         Flights flight2 = new Flights("Alitalia", "Montreal, Canada", "Milan, Italy",
                 LocalDate.of(2025, 11, 3),
                 LocalDate.of(2025, 11, 4),
                 LocalTime.of(19, 0),
                 LocalTime.of(7, 0),
-                1150.0);
+                1150.0,"INT-FLT-002B");
 
         Flights flight3 = new Flights("Lufthansa", "Montreal, Canada", "Berlin, Germany",
                 LocalDate.of(2025, 11, 5),
                 LocalDate.of(2025, 11, 6),
                 LocalTime.of(18, 30),
                 LocalTime.of(6, 30),
-                1100.0);
+                1100.0,"INT-FLT-003C");
 
         Flights flight4= new Flights("Japan Airlines", "Montreal, Canada", "Tokyo, Japan",
                 LocalDate.of(2025, 11, 8),
                 LocalDate.of(2025, 11, 9),
                 LocalTime.of(21, 0),
                 LocalTime.of(12, 0),
-                1500.0);
+                1500.0,"INT-FLT-004D");
 
         Flights flight5 = new Flights("Eva Air", "Montreal, Canada", "Taipei, Taiwan",
                 LocalDate.of(2025, 11, 10),
                 LocalDate.of(2025, 11, 11),
                 LocalTime.of(22, 0),
                 LocalTime.of(14, 0),
-                1400.0);
+                1400.0,"INT-FLT-005E");
 
         Flights flight6 = new Flights("Air Algérie", "Montreal, Canada", "Oran, Algeria",
                 LocalDate.of(2025, 11, 12),
                 LocalDate.of(2025, 11, 13),
                 LocalTime.of(20, 0),
                 LocalTime.of(8, 0),
-                1000.0);
+                1000.0,"INT-FLT-006F");
 
 
         Flights flight7 = new Flights("United Airlines", "Montreal, Canada", "New York, United-States",
@@ -87,14 +87,14 @@ public class MilestoneProjectApplication implements CommandLineRunner {
                 LocalDate.of(2025, 11, 19),
                 LocalTime.of(7, 30),
                 LocalTime.of(9, 0),
-                300.0);
+                300.0,"INT-FLT-007G");
 
         Flights flight8 = new Flights("Iberia", "Montreal, Canada", "Madrid, Spain",
                 LocalDate.of(2025, 11, 20),
                 LocalDate.of(2025, 11, 21),
                 LocalTime.of(19, 0),
                 LocalTime.of(9, 0),
-                1250.0);
+                1250.0,"INT-FLT-008H");
 
 
         Flights flight9 = new Flights("Korean Air", "Montreal, Canada", "Seoul, Korea",
@@ -102,14 +102,14 @@ public class MilestoneProjectApplication implements CommandLineRunner {
                 LocalDate.of(2025, 11, 25),
                 LocalTime.of(22, 0),
                 LocalTime.of(13, 0),
-                1500.0);
+                1500.0,"INT-FLT-009I");
 
         Flights flight10 = new Flights("Emirates", "Montreal, Canada", "Malé, Maldives",
                 LocalDate.of(2025, 11, 26),
                 LocalDate.of(2025, 11, 27),
                 LocalTime.of(21, 0),
                 LocalTime.of(10, 0),
-                1800.0);
+                1800.0,"INT-FLT-010J");
 
 
 
@@ -230,9 +230,66 @@ public class MilestoneProjectApplication implements CommandLineRunner {
                 flight8
         );
 
+        Passenger passenger9 = new Passenger(
+                "Myriam", "Silva",
+                LocalDate.of(1982, 1, 30),
+                "Male",
+                "890 Rue Saint-Laurent, Montreal, QC",
+                "438-990-1122",
+                "carlos.silva@email.com",
+                "CA6677889",
+                LocalDate.of(2028, 7, 12),
+                "4024 0071 0900 0000",
+                1,
+                flight8
+        );
+
+        Passenger passenger10 = new Passenger(
+                "Lina", "Karam",
+                LocalDate.of(1990, 5, 14),
+                "Female",
+                "2210 Rue Sherbrooke O, Montreal, QC",
+                "438-502-7788",
+                "lina.karam@email.com",
+                "CA7788990",
+                LocalDate.of(2029, 3, 22),
+                "4024 0091 5600 1010",
+                1,
+                flight9
+        );
+
+        Passenger passenger11 = new Passenger(
+                "Ethan", "Dubois",
+                LocalDate.of(1988, 9, 3),
+                "Male",
+                "153 Rue Crescent, Montreal, QC",
+                "514-765-4432",
+                "ethan.dubois@email.com",
+                "CA4455667",
+                LocalDate.of(2027, 11, 5),
+                "4024 0023 8900 3333",
+                2,
+                flight10
+        );
+
+        Passenger passenger12 = new Passenger(
+                "Amira", "Nguyen",
+                LocalDate.of(1995, 12, 25),
+                "Female",
+                "6400 Boul. Décarie, Montreal, QC",
+                "514-998-7700",
+                "amira.nguyen@email.com",
+                "CA9988776",
+                LocalDate.of(2028, 6, 18),
+                "4024 0044 2211 5555",
+                3,
+                flight10
+        );
 
 
-        passengerRepository.saveAll(Arrays.asList(passenger1,passenger2,passenger3,passenger4,passenger5,passenger6,passenger7,passenger8));
+
+
+        passengerRepository.saveAll(Arrays.asList(passenger1,passenger2,passenger3,passenger4,passenger5,passenger6,passenger7,passenger8,passenger9,passenger10,passenger11,passenger12));
 
         System.out.println("Number of flights in DB: " + flightsRepository.count());
         logger.info("Flights count: {}", flightsRepository.count());
