@@ -117,22 +117,35 @@ public class MilestoneProjectApplication implements CommandLineRunner {
                 flight9,flight10));
 
 
+
+        Passenger passenger1 = new Passenger(
+                "Maria", "Gomez",
+                LocalDate.of(1996, 10, 9),
+                "Female",
+                "2009 Boulevard Marie",
+                "514-765-9006",
+                "mariaGooomez96@hotmail.com",
+                "HelloPassportNumHere",
+                LocalDate.of(2029, 1, 16),
+                "4390 8901 6783 5352",
+                2,
+                flight2);
+
+        Passenger passenger2 = new Passenger(
+                "Jack", "Compos",
+                LocalDate.of(1989, 5, 19),
+                "Male",
+                "2201 St-Laurent Marie",
+                "514-192-1209",
+                "JackC@gmail.com",
+                "HelloPassportNumHere",
+                LocalDate.of(2027, 12, 29),
+                "1299 1289 2490 1274",
+                1,
+                flight2);
+
 //
-//        Passenger passenger1 = new Passenger(
-//                "Maria", "Gomez",
-//                LocalDate.of(1996, 10, 9),
-//                "Female",
-//                "2009 Boulevard Marie",
-//                "514-765-9006",
-//                "mariaGooomez96@hotmail.com",
-//                "HelloPassportNumHere",
-//                LocalDate.of(2029, 1, 16),
-//                "4390 8901 6783 5352",
-//                2,
-//                flight2);
-//
-//
-//        passengerRepository.save(passenger1);
+        passengerRepository.saveAll(Arrays.asList(passenger1, passenger2));
         System.out.println("Number of flights in DB: " + flightsRepository.count());
         logger.info("Flights count: {}", flightsRepository.count());
 
