@@ -15,3 +15,4 @@ public class FlightsSummary {
     private String destination;
 
 }
+

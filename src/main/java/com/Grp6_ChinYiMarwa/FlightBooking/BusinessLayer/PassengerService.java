@@ -17,7 +17,7 @@ import java.util.Optional;
 public class PassengerService {
 
     private final PassengerRepository passengerRepository;
-    private PassengerMapper passengerMapper;
+    private final PassengerMapper passengerMapper;
 
     public PassengerService(PassengerRepository passengerRepository, PassengerMapper passengerMapper) {
         this.passengerRepository=passengerRepository;
