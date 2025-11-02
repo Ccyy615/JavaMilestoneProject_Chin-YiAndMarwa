@@ -56,4 +56,10 @@ public class PassengerController {
         this.passengerService.deletePassenger(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/flights")
+    public ResponseEntity<List<PassengerWithFlightResponseDTO>> getFlightByPassenger(@PathVariable String id) {
+        List<PassengerWithFlightResponseDTO> flight =this.passengerService.getFlightByPassengerId(id);
+        return ResponseEntity.ok(flight);
+    }
 }
