@@ -2,6 +2,7 @@ package com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
@@ -24,28 +25,23 @@ public class Passenger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long passengerId; //PK
 
-    private int ticketId;
-
-    private String lastName;
+    @NotBlank
     private String firstName;
+    private String lastName;
 
-    @Past // this is for date of birth must be in the past
+    @Past
     private LocalDate dateOfBirth;
     private String gender;
     private String address;
     private String phoneNumber;
 
-  @Email(message = "invalid email") // those are validation examples
+    @Email(message = "invalid email")
     private String email;
 
     private String passportNumber;
     private LocalDate passportExpiryDate;
     private String creditCardNumber;
 
-
-
-    //FirstClass, Economy, Business
-    private String FlightClass;
     private int numOfBaggage;
 
     @ManyToOne(cascade = CascadeType.MERGE)

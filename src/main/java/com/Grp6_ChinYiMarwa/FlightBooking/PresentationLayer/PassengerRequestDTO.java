@@ -19,11 +19,11 @@ public class PassengerRequestDTO {
      private LocalDate dateOfBirth;
      private String gender;
      private String address;
-     private int phoneNumber;
+     private String phoneNumber;
      private String email;
-     private int passportNumber;
+     private String passportNumber;
      private LocalDate passportExpiryDate;
-     private int creditCardNumber;
+     private String creditCardNumber;
      private int numOfBaggage;
 
 }

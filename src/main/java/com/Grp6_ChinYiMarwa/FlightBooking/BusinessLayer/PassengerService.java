@@ -1,55 +1,119 @@
 package com.Grp6_ChinYiMarwa.FlightBooking.BusinessLayer;
 
 
+import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Flights;
+import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.FlightsRepository;
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Passenger;
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.PassengerRepository;
+import com.Grp6_ChinYiMarwa.FlightBooking.MapperLayer.FlightsMapper;
+import com.Grp6_ChinYiMarwa.FlightBooking.MapperLayer.PassengerMapper;
+import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsResponseDTO;
+import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerRequestDTO;
+import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerResponseDTO;
+import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerWithFlightResponseDTO;
+import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.PassengerNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PassengerService {
 
     private final PassengerRepository passengerRepository;
+    private final PassengerMapper passengerMapper;
+    private final FlightsRepository  flightsRepository;
+    private final FlightsMapper flightsMapper;
 
-    public PassengerService(PassengerRepository passengerRepository) {
-        this.passengerRepository=passengerRepository;
-    }
-
-    public List<Passenger> getPassengers() {
-
+    public List<Passenger> getAllPassengers() {
         return this.passengerRepository.findAll();
     }
 
-    public Optional<Passenger> getPassengerById(Long id) {
-        return this.passengerRepository.findById(id);
+    public PassengerService(PassengerRepository passengerRepository, PassengerMapper passengerMapper,
+                            FlightsRepository flightsRepository, FlightsMapper flightsMapper) {
+        this.passengerRepository=passengerRepository;
+        this.passengerMapper=passengerMapper;
+        this.flightsRepository=flightsRepository;
+        this.flightsMapper = flightsMapper;
     }
 
-    public Passenger createPassenger(Map<String, Object> passengerData) {
+    public List<PassengerResponseDTO> getPassengers() {
 
-        Passenger passenger = new Passenger();
+        List<Passenger> passengers = this.passengerRepository.findAll();
+        List<PassengerResponseDTO> passengerResponseDTO= new ArrayList<>();
+
+        for(Passenger passenger : passengers) {
+            passengerResponseDTO.add(this.passengerMapper.toResponse(passenger));
+        }
+        return passengerResponseDTO;
+    }
+
+    public PassengerResponseDTO getPassengerById(String id) {
+        long idLong = Long.parseLong(id);
+        return this.passengerRepository.findById(idLong)
+                .map(this.passengerMapper::toResponse)
+                .orElseThrow(()-> new PassengerNotFoundException("Passenger " + id + " not Found"));
+    }
+
+    public PassengerResponseDTO createPassenger(PassengerRequestDTO passengerData) {
+
+        Passenger newPassenger = this.passengerMapper.fromRequestDTOtoPassengerEntity(passengerData);
+        Passenger saveNewPassenger = this.passengerRepository.save(newPassenger);
+
+        return this.passengerMapper.toResponse(saveNewPassenger);
+        /*Passenger passenger = new Passenger();
         passenger.setFirstName( passengerData.get("firstName").toString());
         passenger.setLastName(passengerData.get("lastName").toString());
-
         Passenger savedNewPassenger = this.passengerRepository.save(passenger);
-        return savedNewPassenger;
+        return savedNewPassenger;*/
 
     }
 
-    public Passenger updatePassenger(Long id, Map<String, Object> passengerData) {
+    public PassengerResponseDTO updatePassenger(String id, PassengerRequestDTO passengerData) {
 
-        Passenger passenger = this.passengerRepository.findById(id).get();
+        long idLong = Long.parseLong(id);
+        Optional<Passenger> passenger = this.passengerRepository.findById(idLong);
+        if(passenger.isEmpty())
+            throw new PassengerNotFoundException("Passenger "+id+" not Found.");
+
+        Passenger newPassenger = this.passengerMapper.fromRequestDTOtoPassengerEntity(passengerData);
+
+        newPassenger.setPassengerId(idLong);
+        Passenger updatedPassenger = this.passengerRepository.save(newPassenger);
+
+        return passengerMapper.toResponse(updatedPassenger);
+        /*Passenger passenger = this.passengerRepository.findById(id).get();
         passenger.setFirstName( passengerData.get("firstName").toString());
         passenger.setLastName(passengerData.get("lastName").toString());
-
         Passenger savedPassenger = this.passengerRepository.save(passenger);
-        return savedPassenger;
+        return savedPassenger;*/
     }
 
-    public void deletePassenger(Long id) {
-        this.passengerRepository.deleteById(id);
+    public void deletePassenger(String id) {
+        long idLong = Long.parseLong(id);
+        this.passengerRepository.deleteById(idLong);
     }
 
+    public List<PassengerWithFlightResponseDTO> getFlightByPassengerId(String id) {
+        long longId = Long.parseLong(id);
+        Passenger passenger = this.passengerRepository.findById(longId)
+                .orElseThrow(() -> new PassengerNotFoundException("Passenger with given id is not found: " + id));
+
+        List<Flights> flights = this.flightsRepository.findByPassenger(passenger);
+        List<FlightsResponseDTO> flightsResponseDTOS= flights.stream()
+                .map(flightsMapper::toResponse)
+                .collect(Collectors.toList());
+
+        PassengerWithFlightResponseDTO passengerWithFlightResponseDTO = new PassengerWithFlightResponseDTO();
+        passengerWithFlightResponseDTO.setPassengerId(passenger.getPassengerId());
+        passengerWithFlightResponseDTO.setFirstName(passenger.getFirstName());
+        passengerWithFlightResponseDTO.setLastName(passenger.getLastName());
+        passengerWithFlightResponseDTO.setEmail(passenger.getEmail());
+        passengerWithFlightResponseDTO.setFlightsResponseDTO(flightsResponseDTOS);
+
+        return Collections.singletonList(passengerWithFlightResponseDTO);
+    }
 }
