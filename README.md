@@ -136,3 +136,5 @@ try it with that: https://milestoneproject-chin-yiandmarwa-axqq.onrender.com/pas
 
 o Credentials (if any) 
 
+Part1 PDF: file:///C:/Users/chiny/MilestoneProject/Milestone_Java_Chin-YiandMarwa.pdf
+
