@@ -11,7 +11,6 @@ import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsResponseDTO;
 import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerResponseDTO;
 import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.FlightNotFoundException;
 import com.Grp6_ChinYiMarwa.FlightBooking.Utilities.InvalidRequestFlightException;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -100,7 +99,7 @@ public class FlightsService {
             Flights updatedFlight=this.flightsRepository.save(existingFlight);
             return this.flightsMapper.toResponse(updatedFlight);
         }catch(NumberFormatException message){
-            throw new InvalidRequestFlightException("Invalid id format: "+id+" Valid Id format ex. 1");
+            throw new InvalidRequestFlightException("Invalid id format: "+id+" (Valid Id format ex. 1)");
         }
 
     }
@@ -109,11 +108,16 @@ public class FlightsService {
     //delete a flight
 
     public void deleteFlightById(String id){
-        long idLong = Long.parseLong(id);
+        try{
+            long idLong = Long.parseLong(id);
 
-        Flights existingFlight=this.flightsRepository.findById(idLong)
-                .orElseThrow(()-> new FlightNotFoundException("Flight: "+ id + "does not exist"));
-        flightsRepository.deleteById(idLong);
+            Flights existingFlight=this.flightsRepository.findById(idLong)
+                    .orElseThrow(()-> new FlightNotFoundException("Flight: "+ id + "does not exist"));
+            flightsRepository.deleteById(idLong);
+        }catch(NumberFormatException ex){
+            throw new InvalidRequestFlightException("Invalid id format: "+ id +" (Valid Id format ex. 1)");
+        }
+
     }
 
 
@@ -123,7 +127,7 @@ public class FlightsService {
             Flights flights=this.flightsRepository.findById(idLong)
                     .orElseThrow(()-> new FlightNotFoundException("Flight:  " + idLong +" does not exist"));
             List<Passenger> passengers=this.passengerRepository.findPassengerByFlight(flights);
-            return passengers.stream().map(PassengerMapper::toResponse)
+            return passengers.stream().map(PassengerMapper::toResponseToFlight)
                     .collect(Collectors.toList());
         }
         catch(NumberFormatException e){

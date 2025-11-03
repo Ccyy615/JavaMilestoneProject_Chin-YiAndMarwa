@@ -67,10 +67,4 @@ public class Passenger {
         this.flight = flight;
     }
 
-
-
-
-
-
-
 }

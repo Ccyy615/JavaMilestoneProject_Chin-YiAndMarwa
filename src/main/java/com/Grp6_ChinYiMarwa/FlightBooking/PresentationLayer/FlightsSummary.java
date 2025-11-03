@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalTime;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -17,4 +19,6 @@ public class FlightsSummary {
     private String destination;
 
 
+    public FlightsSummary(Long flightId, String placeDepart, LocalTime departTime, String destination) {
+    }
 }

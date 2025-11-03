@@ -38,9 +38,9 @@ public class Flights {
     @Min(50)
     private double price;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "passenger_id")
-    private Passenger passenger;
+    @OneToMany(mappedBy="flight",cascade = CascadeType.ALL)
+//    @JoinColumn(name = "passenger_id")
+    private List<Passenger> passenger;
 
 
     public Flights(String airline, String placeDepart, String destination,
