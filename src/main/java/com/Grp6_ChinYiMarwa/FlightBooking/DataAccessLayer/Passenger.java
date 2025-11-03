@@ -27,6 +27,7 @@ public class Passenger {
 
     @NotBlank
     private String firstName;
+    @NotBlank
     private String lastName;
 
     @Past

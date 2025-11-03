@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
         Map<String,Object> bodyResponse= new HashMap<>();
         bodyResponse.put("timestamp",LocalDateTime.now());
         bodyResponse.put("status", HttpStatus.BAD_REQUEST.value());
-        bodyResponse.put("error","Invalid passport");
+        bodyResponse.put("error","We cannot accept this Passport");
         bodyResponse.put("message",passport.getMessage());
         bodyResponse.put("path", requestPath.getRequestURI());
 
