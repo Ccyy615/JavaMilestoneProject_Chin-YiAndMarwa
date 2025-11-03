@@ -1,42 +1,101 @@
+
 package com.Grp6_ChinYiMarwa.FlightBooking.MapperLayer;
 
 
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Flights;
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Passenger;
-import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsRequestDTO;
-import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsResponseDTO;
+import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsSummary;
+import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerRequestDTO;
 import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerResponseDTO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PassengerMapper {
 
-
-    public static PassengerResponseDTO toResponse(Passenger passenger){
+    public static PassengerResponseDTO toResponseToFlight(Passenger passenger) {
         Flights flights = passenger.getFlight();
 
-        return new PassengerResponseDTO(passenger.getPassengerId(), passenger.getFirstName(),passenger.getLastName()
-                );
+        FlightsSummary flightsSummaryToFlight;
+
+        if (flights == null)
+            flightsSummaryToFlight = null;
+        else
+            flightsSummaryToFlight = new FlightsSummary(flights.getFlightId(), flights.getPlaceDepart(), flights.getDepartTime(), flights.getDestination());
+
+        return new PassengerResponseDTO(passenger.getPassengerId(), passenger.getFirstName(), passenger.getLastName()
+        );
     }
 
-//    public Flights toEntity(FlightsRequestDTO flightRequest){
-//        if(flightRequest==null)
-//            return null;
-//
-//        Flights f1=new Flights();
-//        f1.setAirline(flightRequest.getAirline());
-//        f1.setPlaceDepart(flightRequest.getPlaceDepart());
-//        f1.setDepartDate(flightRequest.getDepartDate());
-//        f1.setDepartTime(flightRequest.getDepartTime());
-//        f1.setDestination(flightRequest.getDestination());
-//        f1.setArrivalDate(flightRequest.getArrivalDate());
-//        f1.setArrivalTime(flightRequest.getArrivalTime());
-//        f1.setPrice(flightRequest.getPrice());
-//
-//        return f1;
-//    }
+    public PassengerResponseDTO toResponse(Passenger passenger) {
+        Flights flights = passenger.getFlight();
+
+        return new PassengerResponseDTO(passenger.getPassengerId(), passenger.getFirstName(), passenger.getLastName()
+        );
+    }
 
 
+    public Passenger fromRequestDTOtoPassengerEntity(PassengerRequestDTO passengerRequestDTO) {
 
+        if (passengerRequestDTO == null)
+            return null;
+
+        Passenger passenger = new Passenger();
+
+        passenger.setFirstName(passengerRequestDTO.getFirstName());
+        passenger.setLastName(passengerRequestDTO.getLastName());
+        passenger.setPhoneNumber(passengerRequestDTO.getPhoneNumber());
+        passenger.setAddress(passengerRequestDTO.getAddress());
+        passenger.setEmail(passengerRequestDTO.getEmail());
+        passenger.setPassportNumber(passengerRequestDTO.getPassportNumber());
+        passenger.setPassportExpiryDate(passengerRequestDTO.getPassportExpiryDate());
+
+        return passenger;
+    }
 
 }
+
+
+
+
+//package com.Grp6_ChinYiMarwa.FlightBooking.MapperLayer;
+//
+//
+//import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Flights;
+//import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Passenger;
+//import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsRequestDTO;
+//import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.FlightsResponseDTO;
+//import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerRequestDTO;
+//import com.Grp6_ChinYiMarwa.FlightBooking.PresentationLayer.PassengerResponseDTO;
+//import org.springframework.stereotype.Component;
+//
+//@Component
+//public class PassengerMapper {
+//
+//
+//    public PassengerResponseDTO toResponse(Passenger passenger){
+//        Flights flights = passenger.getFlight();
+//
+//        return new PassengerResponseDTO(passenger.getPassengerId(), passenger.getFirstName(),passenger.getLastName()
+//                );
+//    }
+//
+//
+//    public Passenger fromRequestDTOtoPassengerEntity(PassengerRequestDTO passengerRequestDTO){
+//
+//        if(passengerRequestDTO == null)
+//            return null;
+//
+//        Passenger passenger = new Passenger();
+//
+//        passenger.setFirstName(passengerRequestDTO.getFirstName());
+//        passenger.setLastName(passengerRequestDTO.getLastName());
+//        passenger.setPhoneNumber(passengerRequestDTO.getPhoneNumber());
+//        passenger.setAddress(passengerRequestDTO.getAddress());
+//        passenger.setEmail(passengerRequestDTO.getEmail());
+//        passenger.setPassportNumber(passengerRequestDTO.getPassportNumber());
+//        passenger.setPassportExpiryDate(passengerRequestDTO.getPassportExpiryDate());
+//
+//        return passenger;
+//    }
+//
+//}

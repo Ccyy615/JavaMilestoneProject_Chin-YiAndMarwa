@@ -17,8 +17,8 @@ public class PassengerResponseDTO {
     private Long passengerId;
     private String firstName;
     private String lastName;
-    private String phoneNumber;
-    private String email;
+//    private String phoneNumber;
+//    private String email;
 
 //    private String passportNumber;
 //    private LocalDate passportExpiryDate;
