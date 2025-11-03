@@ -47,11 +47,16 @@ public class FlightsService {
     //get flight by id
 
     public FlightsResponseDTO getFlightById(@PathVariable String id){
-        long idLong=Long.parseLong(id);
+        try{
+            long idLong=Long.parseLong(id);
 //        Optional<Flights> flights= this.flightsRepository.findById(idLong);
-        Flights flights = flightsRepository.findById(idLong)
-                .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + id + " not found"));
-        return this.flightsMapper.toResponse(flights);
+            Flights flights = flightsRepository.findById(idLong)
+                    .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + id + " not found"));
+            return this.flightsMapper.toResponse(flights);
+        }catch(NumberFormatException ex){
+            throw new InvalidRequestFlightException("Invalid id format: "+id+" (Valid Id format ex. 1)");
+        }
+
     }
 
 
