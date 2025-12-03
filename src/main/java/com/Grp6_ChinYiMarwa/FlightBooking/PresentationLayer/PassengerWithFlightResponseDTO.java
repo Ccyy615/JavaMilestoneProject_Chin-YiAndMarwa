@@ -15,5 +15,5 @@ public class PassengerWithFlightResponseDTO {
     private String lastName;
     private String email;
 
-    private List<FlightsResponseDTO> flightsResponseDTO;
+    private FlightsResponseDTO flightsResponseDTO;
 }
