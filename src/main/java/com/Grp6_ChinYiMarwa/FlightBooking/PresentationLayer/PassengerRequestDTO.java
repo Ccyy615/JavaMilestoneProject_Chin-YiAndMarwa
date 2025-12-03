@@ -25,5 +25,6 @@ public class PassengerRequestDTO {
      private LocalDate passportExpiryDate;
      private String creditCardNumber;
      private int numOfBaggage;
+     private Long flightId;
 
 }

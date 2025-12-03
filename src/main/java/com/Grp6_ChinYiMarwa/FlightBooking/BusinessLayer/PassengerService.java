@@ -1,6 +1,5 @@
 package com.Grp6_ChinYiMarwa.FlightBooking.BusinessLayer;
 
-
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Flights;
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.FlightsRepository;
 import com.Grp6_ChinYiMarwa.FlightBooking.DataAccessLayer.Passenger;
@@ -30,119 +29,135 @@ public class PassengerService {
 
     private final PassengerRepository passengerRepository;
     private final PassengerMapper passengerMapper;
-    private final FlightsRepository  flightsRepository;
+    private final FlightsRepository flightsRepository;
     private final FlightsMapper flightsMapper;
 
-    public List<Passenger> getAllPassengers() {
-        return this.passengerRepository.findAll();
-    }
-
-    public PassengerService(PassengerRepository passengerRepository, PassengerMapper passengerMapper,
-                            FlightsRepository flightsRepository, FlightsMapper flightsMapper) {
-        this.passengerRepository=passengerRepository;
-        this.passengerMapper=passengerMapper;
-        this.flightsRepository=flightsRepository;
+    public PassengerService(PassengerRepository passengerRepository,
+                            PassengerMapper passengerMapper,
+                            FlightsRepository flightsRepository,
+                            FlightsMapper flightsMapper) {
+        this.passengerRepository = passengerRepository;
+        this.passengerMapper = passengerMapper;
+        this.flightsRepository = flightsRepository;
         this.flightsMapper = flightsMapper;
     }
 
     public List<PassengerResponseDTO> getPassengers() {
         List<Passenger> passengers = this.passengerRepository.findAll();
-        List<PassengerResponseDTO> passengerResponseDTO= new ArrayList<>();
+        List<PassengerResponseDTO> passengerResponseDTOs = new ArrayList<>();
         for(Passenger passenger : passengers) {
-            passengerResponseDTO.add(this.passengerMapper.toResponse(passenger));
+            passengerResponseDTOs.add(this.passengerMapper.toResponse(passenger));
         }
-        return passengerResponseDTO;
+        return passengerResponseDTOs;
     }
-
 
     public PassengerResponseDTO getPassengerById(String id) {
         try{
             long idLong = Long.parseLong(id);
             return this.passengerRepository.findById(idLong)
                     .map(this.passengerMapper::toResponse)
-                    .orElseThrow(()-> new PassengerNotFoundException("Passenger " + id + " not Found"));
-        }catch(NumberFormatException ex){
-            throw new InvalidPassengerIdException("Invalid id format"+id+" Valid Id format ex. 1");
+                    .orElseThrow(() -> new PassengerNotFoundException("Passenger " + id + " not Found"));
+        } catch(NumberFormatException ex) {
+            throw new InvalidPassengerIdException("Invalid id format " + id + " Valid Id format ex. 1");
         }
-
     }
-
-
 
     public PassengerResponseDTO createPassenger(PassengerRequestDTO passengerData) {
 
-        if (passengerData.getPassportExpiryDate().isBefore(LocalDate.now())) {
+        // Check if passportExpiryDate is not null before comparing
+        if (passengerData.getPassportExpiryDate() != null &&
+                passengerData.getPassportExpiryDate().isBefore(LocalDate.now())) {
             throw new InvalidPassportExpiredException("Passport is expired");
-        }else if (Period.between(passengerData.getDateOfBirth(), LocalDate.now()).getYears() < 18){
-            throw new InvalidAgeBookingException("Invalid Age");
         }
-            Passenger newPassenger = this.passengerMapper.fromRequestDTOtoPassengerEntity(passengerData);
-            Passenger saveNewPassenger = this.passengerRepository.save(newPassenger);
 
-            return this.passengerMapper.toResponse(saveNewPassenger);
-        /*Passenger passenger = new Passenger();
-        passenger.setFirstName( passengerData.get("firstName").toString());
-        passenger.setLastName(passengerData.get("lastName").toString());
-        Passenger savedNewPassenger = this.passengerRepository.save(passenger);
-        return savedNewPassenger;*/
+        // Check if dateOfBirth is not null before calculating age
+        if (passengerData.getDateOfBirth() != null) {
+            int age = Period.between(passengerData.getDateOfBirth(), LocalDate.now()).getYears();
+            if (age < 18) {
+                throw new InvalidAgeBookingException("Invalid Age: Must be 18 or older");
+            }
+        }
+
+        // Validate required fields
+        if (passengerData.getFirstName() == null || passengerData.getFirstName().trim().isEmpty()) {
+            throw new RuntimeException("First name is required");
+        }
+
+        if (passengerData.getLastName() == null || passengerData.getLastName().trim().isEmpty()) {
+            throw new RuntimeException("Last name is required");
+        }
+
+        if (passengerData.getFlightId() == null) {
+            throw new RuntimeException("Flight ID is required");
+        }
+
+        // Check if flight exists
+        if (!flightsRepository.existsById(passengerData.getFlightId())) {
+            throw new RuntimeException("Flight not found with id: " + passengerData.getFlightId());
+        }
+
+        Passenger newPassenger = this.passengerMapper.fromRequestDTOtoPassengerEntity(passengerData);
+        Passenger savedPassenger = this.passengerRepository.save(newPassenger);
+
+        return this.passengerMapper.toResponse(savedPassenger);
     }
 
     public PassengerResponseDTO updatePassenger(String id, PassengerRequestDTO passengerData) {
-try{
-    long idLong = Long.parseLong(id);
-    Optional<Passenger> passenger = this.passengerRepository.findById(idLong);
-    if(passenger.isEmpty())
-        throw new PassengerNotFoundException("Passenger "+id+" not Found.");
+        try {
+            long idLong = Long.parseLong(id);
+            Optional<Passenger> passenger = this.passengerRepository.findById(idLong);
+            if(passenger.isEmpty())
+                throw new PassengerNotFoundException("Passenger " + id + " not Found.");
 
-    Passenger newPassenger = this.passengerMapper.fromRequestDTOtoPassengerEntity(passengerData);
+            Passenger newPassenger = this.passengerMapper.fromRequestDTOtoPassengerEntity(passengerData);
+            newPassenger.setPassengerId(idLong);
+            Passenger updatedPassenger = this.passengerRepository.save(newPassenger);
 
-    newPassenger.setPassengerId(idLong);
-    Passenger updatedPassenger = this.passengerRepository.save(newPassenger);
-
-    return passengerMapper.toResponse(updatedPassenger);
-        /*Passenger passenger = this.passengerRepository.findById(id).get();
-        passenger.setFirstName( passengerData.get("firstName").toString());
-        passenger.setLastName(passengerData.get("lastName").toString());
-        Passenger savedPassenger = this.passengerRepository.save(passenger);
-        return savedPassenger;*/
-}catch(NumberFormatException ex){
-    throw new InvalidPassengerIdException("Invalid id format"+id+" Valid Id format ex. 1");
-}
-
+            return passengerMapper.toResponse(updatedPassenger);
+        } catch(NumberFormatException ex) {
+            throw new InvalidPassengerIdException("Invalid id format " + id + " Valid Id format ex. 1");
+        }
     }
 
     public void deletePassenger(String id) {
-        try{
+        try {
             long idLong = Long.parseLong(id);
             this.passengerRepository.deleteById(idLong);
-
-        }catch(NumberFormatException ex){
-            throw new InvalidPassengerIdException("Invalid id format"+id+" Valid Id format ex. 1");
+        } catch(NumberFormatException ex) {
+            throw new InvalidPassengerIdException("Invalid id format " + id + " Valid Id format ex. 1");
         }
-
     }
 
     public List<PassengerWithFlightResponseDTO> getFlightByPassengerId(String id) {
-        try{
+        try {
             long longId = Long.parseLong(id);
             Passenger passenger = this.passengerRepository.findById(longId)
                     .orElseThrow(() -> new PassengerNotFoundException("Passenger with given id is not found: " + id));
 
-            List<Flights> flights = this.flightsRepository.findByPassenger(passenger);
-            List<FlightsResponseDTO> flightsResponseDTOS= flights.stream()
-                    .map(flightsMapper::toResponse)
-                    .collect(Collectors.toList());
+            // Get only the first flight
+            Flights flight = this.flightsRepository.findByPassenger(passenger).stream().findFirst().orElse(null);
 
-            PassengerWithFlightResponseDTO passengerWithFlightResponseDTO = new PassengerWithFlightResponseDTO();
-            passengerWithFlightResponseDTO.setPassengerId(passenger.getPassengerId());
-            passengerWithFlightResponseDTO.setFirstName(passenger.getFirstName());
-            passengerWithFlightResponseDTO.setLastName(passenger.getLastName());
-            passengerWithFlightResponseDTO.setEmail(passenger.getEmail());
-            passengerWithFlightResponseDTO.setFlightsResponseDTO(flightsResponseDTOS);
+            FlightsResponseDTO flightResponseDTO = null;
+            if (flight != null) {
+                flightResponseDTO = flightsMapper.toResponse(flight);
+            }
+
+            PassengerWithFlightResponseDTO passengerWithFlightResponseDTO =
+                    getPassengerWithFlightResponseDTO(passenger, flightResponseDTO);
 
             return Collections.singletonList(passengerWithFlightResponseDTO);
-        }catch(NumberFormatException ex){
-            throw new InvalidPassengerIdException("Invalid id format"+id+" Valid Id format ex. 1");
+        } catch (NumberFormatException ex) {
+            throw new InvalidPassengerIdException("Invalid id format " + id + ". Valid Id format ex. 1");
         }
+    }
+
+    private static PassengerWithFlightResponseDTO getPassengerWithFlightResponseDTO(Passenger passenger, FlightsResponseDTO flightsResponseDTOS) {
+        PassengerWithFlightResponseDTO passengerWithFlightResponseDTO = new PassengerWithFlightResponseDTO();
+        passengerWithFlightResponseDTO.setPassengerId(passenger.getPassengerId());
+        passengerWithFlightResponseDTO.setFirstName(passenger.getFirstName());
+        passengerWithFlightResponseDTO.setLastName(passenger.getLastName());
+        passengerWithFlightResponseDTO.setEmail(passenger.getEmail());
+        passengerWithFlightResponseDTO.setFlightsResponseDTO(flightsResponseDTOS);
+        return passengerWithFlightResponseDTO;
     }
 }

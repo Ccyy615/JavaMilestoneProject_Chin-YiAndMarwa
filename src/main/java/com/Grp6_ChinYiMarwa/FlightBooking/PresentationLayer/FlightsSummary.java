@@ -18,6 +18,12 @@ public class FlightsSummary {
     private String departTime;
     private String destination;
 
+    public FlightsSummary(Long flightId) {
+        this.flightId = flightId;
+        this.placeDepart = null;
+        this.departTime = null;
+        this.destination = null;
+    }
 
     public FlightsSummary(Long flightId, String placeDepart, LocalTime departTime, String destination) {
     }

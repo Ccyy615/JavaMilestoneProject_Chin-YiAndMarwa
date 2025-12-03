@@ -13,6 +13,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -49,6 +50,8 @@ public class Passenger {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "fK_flight_id")
     private Flights flight; //flight object
+
+
 
     public Passenger(String firstName,String lastName,
                      LocalDate dateOfBirth, String gender, String address, String phoneNumber, String email,
